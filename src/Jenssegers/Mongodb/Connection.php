@@ -28,9 +28,6 @@ class Connection extends \Illuminate\Database\Connection {
      */
     public function __construct(array $config)
     {
-        var_dump($config);
-        exit();
-
         $this->config = $config;
 
         // Build the connection string
@@ -159,6 +156,14 @@ class Connection extends \Illuminate\Database\Connection {
         // in the configuration options. This will give us the basic DSN we will
         // need to establish the MongoClient and return them back for use.
         extract($config);
+
+        /**
+         * Glue added - checks if connection_string is present, if so it uses that instead
+         */
+        if(isset($config['connection_string']))
+        {
+            return $config['connection_string'];
+        }
 
         // Treat host option as array of hosts
         $hosts = is_array($config['host']) ? $config['host'] : array($config['host']);
