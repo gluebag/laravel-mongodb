@@ -131,7 +131,10 @@ class Connection extends \Illuminate\Database\Connection {
             $options['password'] = $config['password'];
         }
 
-        return new MongoClient($dsn, $options);
+        $client = new MongoClient($dsn, $options);
+        dd($client);
+        return $client;
+        //return new MongoClient($dsn, $options);
     }
 
     /**
