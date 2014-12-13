@@ -28,18 +28,43 @@ class Connection extends \Illuminate\Database\Connection {
      */
     public function __construct(array $config)
     {
+        /**
+         * Glue mongoDB options
+         */
+        $speedOptions  = [
+            // If the server is down, don't wait forever
+            "connectTimeoutMS"   => 5000,
+            // When the server goes down in the middle of operation, don't wait forever
+            "socketTimeoutMS"    => 5000,
+            "w"                  => "majority",
+            // Don't wait forever for majority write acknowledgment
+            "wtimeout"           => 1500,
+            // When the primary goes down, allow reading from secondaries
+            "readPreference"     => MongoClient::RP_PRIMARY_PREFERRED,
+
+
+            //// When the primary is down, prioritize reading from our local datacenter
+            //// If that datacenter is down too, fallback to any server available
+            //"readPreferenceTags" => array("dc:is", ""),
+        ];
+
         $this->config = $config;
 
         // Build the connection string
         $dsn = $this->getDsn($config);
 
         // You can pass options directly to the MogoClient constructor
-
         $options = array_get($config, 'options', array());
+
+        $options = array_merge($options, $speedOptions);
 
         // Create the connection
         $this->connection = $this->createConnection($dsn, $config, $options);
 
+        $preferences = [
+            'read' => $this->connection->getReadPreference(),
+        ];
+        dd($preferences);
         // Select database
         $this->db = $this->connection->{$config['database']};
     }
@@ -132,7 +157,7 @@ class Connection extends \Illuminate\Database\Connection {
         }
 
         $client = new MongoClient($dsn, $options);
-        dd($client);
+
         return $client;
         //return new MongoClient($dsn, $options);
     }
