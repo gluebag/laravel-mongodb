@@ -33,12 +33,12 @@ class Connection extends \Illuminate\Database\Connection {
          */
         $speedOptions  = [
             // If the server is down, don't wait forever
-            "connectTimeoutMS"   => 5000,
+            "connectTimeoutMS"   => 2500,
             // When the server goes down in the middle of operation, don't wait forever
             "socketTimeoutMS"    => 5000,
             "w"                  => "majority",
             // Don't wait forever for majority write acknowledgment
-            "wtimeout"           => 1500,
+            "wtimeout"           => 500,
             // When the primary goes down, allow reading from secondaries
             "readPreference"     => MongoClient::RP_PRIMARY_PREFERRED,
 
@@ -61,10 +61,6 @@ class Connection extends \Illuminate\Database\Connection {
         // Create the connection
         $this->connection = $this->createConnection($dsn, $config, $options);
 
-        $preferences = [
-            'read' => $this->connection->getReadPreference(),
-        ];
-        dd($preferences);
         // Select database
         $this->db = $this->connection->{$config['database']};
     }
