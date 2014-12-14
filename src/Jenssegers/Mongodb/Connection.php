@@ -3,6 +3,7 @@
 use Jenssegers\Mongodb\Collection;
 use Jenssegers\Mongodb\Query\Builder as QueryBuilder;
 use MongoClient;
+use MongoLog;
 
 class Connection extends \Illuminate\Database\Connection {
 
@@ -58,8 +59,8 @@ class Connection extends \Illuminate\Database\Connection {
             //"readPreferenceTags" => array("dc:is", ""),
         ];
 
-        //MongoLog::setLevel(MongoLog::ALL);
-        //MongoLog::setModule(MongoLog::ALL);
+        MongoLog::setLevel(MongoLog::ALL);
+        MongoLog::setModule(MongoLog::ALL);
 
         $this->config = $config;
 
