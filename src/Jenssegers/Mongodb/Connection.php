@@ -41,15 +41,15 @@ class Connection extends \Illuminate\Database\Connection {
         $speedOptions  = [
 
             // If the server is down, don't wait forever
-            "connectTimeoutMS"   => 1500,
+            "connectTimeoutMS"   => 5000,
 
             // When the server goes down in the middle of operation, don't wait forever
-            "socketTimeoutMS"    => 5000,
+            "socketTimeoutMS"    => 5500,
 
             "w"                  => "majority",
 
             // Don't wait forever for majority write acknowledgment
-            "wtimeout"           => 500,
+            "wtimeout"           => 1000,
 
             // When the primary goes down, allow reading from secondaries
             "readPreference"     => MongoClient::RP_PRIMARY_PREFERRED,
@@ -59,8 +59,8 @@ class Connection extends \Illuminate\Database\Connection {
             //"readPreferenceTags" => array("dc:is", ""),
         ];
 
-        MongoLog::setLevel(MongoLog::ALL);
-        MongoLog::setModule(MongoLog::ALL);
+        //MongoLog::setLevel(MongoLog::ALL);
+        //MongoLog::setModule(MongoLog::ALL);
 
         $this->config = $config;
 
