@@ -33,7 +33,7 @@ class Connection extends \Illuminate\Database\Connection {
          */
         $speedOptions  = [
             // If the server is down, don't wait forever
-            "connectTimeoutMS"   => 2500,
+            "connectTimeoutMS"   => 500,
             // When the server goes down in the middle of operation, don't wait forever
             "socketTimeoutMS"    => 5000,
             "w"                  => "majority",
