@@ -21,6 +21,12 @@ class Connection extends \Illuminate\Database\Connection {
     protected $connection;
 
     /**
+     * Number of microseconds it took to connect to MongoDB
+     * @var float
+     */
+    public $timeItTookToConnect = 0;
+
+    /**
      * Create a new database connection instance.
      *
      * @param  array   $config
@@ -32,16 +38,20 @@ class Connection extends \Illuminate\Database\Connection {
          * Glue mongoDB options
          */
         $speedOptions  = [
+
             // If the server is down, don't wait forever
-            "connectTimeoutMS"   => 500,
+            "connectTimeoutMS"   => 1500,
+
             // When the server goes down in the middle of operation, don't wait forever
             "socketTimeoutMS"    => 5000,
+
             "w"                  => "majority",
+
             // Don't wait forever for majority write acknowledgment
             "wtimeout"           => 500,
+
             // When the primary goes down, allow reading from secondaries
             "readPreference"     => MongoClient::RP_PRIMARY_PREFERRED,
-
 
             //// When the primary is down, prioritize reading from our local datacenter
             //// If that datacenter is down too, fallback to any server available
@@ -58,8 +68,12 @@ class Connection extends \Illuminate\Database\Connection {
 
         $options = array_merge($options, $speedOptions);
 
+        $before = microtime(true);
         // Create the connection
         $this->connection = $this->createConnection($dsn, $config, $options);
+        $after = microtime(true);
+
+        $this->timeItTookToConnect = ($after - $before);
 
         // Select database
         $this->db = $this->connection->{$config['database']};
