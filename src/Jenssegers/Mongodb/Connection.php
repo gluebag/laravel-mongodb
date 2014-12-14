@@ -58,6 +58,9 @@ class Connection extends \Illuminate\Database\Connection {
             //"readPreferenceTags" => array("dc:is", ""),
         ];
 
+        MongoLog::setLevel(MongoLog::ALL);
+        MongoLog::setModule(MongoLog::ALL);
+
         $this->config = $config;
 
         // Build the connection string
